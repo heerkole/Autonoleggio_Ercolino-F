@@ -20,15 +20,24 @@ void controlla_disp(string Categoria, string Giorni)
 
     if(f.is_open())
     {
+        string linea;
+        size_t trova = linea.find("") //Capire come associare i giorni della settimana ai caratteri trovati nella riga
+        
         while (f.eof())
         {
-            string linea;
             getline(f, linea);
             if(linea == Categoria)
                 macchine.push_back(linea);  //Inserisce la linea nel vettore se trova la categoria inserita
-                //Trovare e modificare la linea in base all'inserimento dell'utente
+                    if(linea == "L")
         }
         f.close();
+
+        cout<<" Le macchine disponibili per la categoria e il giorno selezionati sono : ";
+        for(int i=0;i<macchine.size();i++)
+        {
+            cout<<macchine[i]<<"\n";
+        }
+
     }   
     else {
         cout<<" Errore nell'apertura del file!\n";
@@ -37,20 +46,19 @@ void controlla_disp(string Categoria, string Giorni)
 
 void Scegli_Auto()
 {
-    string scelta,scelta1;
-    //string DaTrovare[8] = {"Utilitaria","utilitaria","Lusso","lusso","Sportiva","sportiva","Furgone","furgone"};
+    string categoria,giorni;
 
     cout<<" Benvenutx all'Autonoleggio!\n"
         <<" Selezionare categoria e giorni della macchina da voler affittare scegliendo tra le seguenti : \n\n"
         <<" 1. Utilitaria, 2. Lusso, 3. Sportiva, 4. Furgone\n"
         <<" >> ";
-    cin>>scelta;
+    cin>>categoria;
 
     cout<<"Inserisci i giorni della settimana in cui affitterai un veicolo, separando più giorni da uno spazio : "
         <<" Lunedi = 1, Martedi = 2, Mercoledi = 3, Giovedi = 4, Venerdi = 5, Sabato = 6, Domenica = 7\n";
-    cin>>scelta1;
+    cin>>giorni;
 
-    controlla_disp(scelta, scelta1);
+    controlla_disp(categoria, giorni);
 }
 
 int main()
