@@ -1,43 +1,85 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
-
+#include <cstring>
 using namespace std;
 
-/* Gestire le prenotazioni dals lunedi a domenica 
-   Una macchina può essere affittata solo per giornate intere
-   Associare i numeri a i giorni della settimana
-  
-   1. Inserimento categoria mmacchina, giorni affitto
-   2. Scelta del veicolo di categoria scelta   
-*/
 
-void controlla_disp(string Categoria, string Giorni)
+void controlla_giorno(int contatore, string vett[])
 {
-    vector<string> macchine; 
-    fstream f;
-    f.open("auto.csv", ios::in | ios::out);
+    if(strcmp(vett[contatore], 'L')==0)
+        cout<<" Disponibile";
+    else 
+        cout<<" Non disponibile";
+}
+
+void controlla_disp(string Categoria, int Giorni)
+{
+    string linea, appoggio, macchina;
+    int giorno, cont;
+    string vett_giorni[7];
+    fstream f("auto.csv", ios::in | ios::out);
 
     if(f.is_open())
-    {
-        string linea;
-        size_t trova = linea.find("") //Capire come associare i giorni della settimana ai caratteri trovati nella riga
+    {   
+        cout<<" Le macchine disponibili per la categoria selezionata sono : \n ";  
         
-        while (f.eof())
+        //Ciclo di ricerca vettura per la categoria selezionata
+        while(getline(f, linea))
         {
-            getline(f, linea);
             if(linea == Categoria)
-                macchine.push_back(linea);  //Inserisce la linea nel vettore se trova la categoria inserita
-                    if(linea == "L")
+                cout<<linea; 
         }
-        f.close();
+        
+        //Scelta della vettura in base alla categoria selezionata
+        cout<<"\n\n Selezionare il modello della vettura da noleggiare : ";
+        cin>>macchina;
 
-        cout<<" Le macchine disponibili per la categoria e il giorno selezionati sono : ";
-        for(int i=0;i<macchine.size();i++)
+        if(macchina!=Categoria)
+            cout<<" La vettura selezionata non fa parte della categoria scelta!\n";
+        else 
         {
-            cout<<macchine[i]<<"\n";
-        }
+            //Ciclo che riempie il vettore "vett_giorni" con i giorni relativi alla vettura selezionata
+            for(int i=0; i<linea.length(); i++)
+            {
+                if((strcmp(linea[i], 'L')==0)||(strcmp(linea[i], 'A')==0))
+                    vett_giorni[i] = linea[i];
+            }
 
+            //Output dei giorni in cui la vettura e disponibile o meno
+            //La funzione "controlla_giorno" si occupa di visualizzare in output "Disponibile" o "Non diponibile" in base alle lettere di noleggio sulla riga della vettura selezionata, evitando di fare un contrllo per ogni output del giorno settimanale
+            cout<<" I giorni i cui si può prenotare la vettura sono : \n ";
+            cont = 0;
+            cout<<" Lunedi (0) : "<<controlla_giorno(cont, vett_giorni[cont]);
+            cont = 1;
+            cout<<" \nMartedi (1) : "<<controlla_giorno(cont, vett_giorni[cont]);
+            cont = 2;
+            cout<<" \nMercoledi (2) : "<<controlla_giorno(cont, vett_giorni[cont]);
+            cont = 3;
+            cout<<" \nGiovedi (3) : "<<controlla_giorno(cont, vett_giorni[cont]);
+            cont = 4;
+            cout<<" \nVenerdi (4) : "<<controlla_giorno(cont, vett_giorni[cont]);
+            cont = 5;
+            cout<<" \nSabato (5) : "<<controlla_giorno(cont, vett_giorni[cont]);
+            cont = 6;
+            cout<<" \nDomenica (6) : "<<controlla_giorno(cont, vett_giorni[cont]);
+
+            cout<<"\n\n Inserire giorno usando un numero, esempio: '4' per selezionare 'Venerdi' :\n";
+
+            //Ciclo che prende in input i giorni e modifica il vettore dei giorni relativi alla vettura selezionata in base ai giorni inseriti dall'utente
+            for(int j=0; j<Giorni; j++)
+            {
+                cout<<" >> ";
+                cin>>giorno;
+
+                if((giorno>7)||(giorno<0))
+                    cout<<" Giorno non valido!\n";
+                else
+                    vett_giorni[giorno] = "A"; 
+            }
+
+            cout<<" Vettura prenotata correttamente!\n";
+        }  
+        f.close();
     }   
     else {
         cout<<" Errore nell'apertura del file!\n";
@@ -46,16 +88,16 @@ void controlla_disp(string Categoria, string Giorni)
 
 void Scegli_Auto()
 {
-    string categoria,giorni;
+    string categoria;
+    int giorni;
 
     cout<<" Benvenutx all'Autonoleggio!\n"
-        <<" Selezionare categoria e giorni della macchina da voler affittare scegliendo tra le seguenti : \n\n"
+        <<" Selezionare categoria e giorni della vettura da voler affittare scegliendo tra le seguenti : \n\n"
         <<" 1. Utilitaria, 2. Lusso, 3. Sportiva, 4. Furgone\n"
         <<" >> ";
     cin>>categoria;
 
-    cout<<"Inserisci i giorni della settimana in cui affitterai un veicolo, separando più giorni da uno spazio : "
-        <<" Lunedi = 1, Martedi = 2, Mercoledi = 3, Giovedi = 4, Venerdi = 5, Sabato = 6, Domenica = 7\n";
+    cout<<" Per quanti giorni affittare la vettura? : \n >> ";
     cin>>giorni;
 
     controlla_disp(categoria, giorni);
