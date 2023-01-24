@@ -3,65 +3,109 @@
 #include <cstring>
 using namespace std;
 
-
-void controlla_giorno(int contatore, string vett[])
+struct InfoAuto
 {
-    if(strcmp(vett[contatore], 'L')==0)
-        cout<<" Disponibile";
+    string categoria;
+    string marca;
+    string modello;
+    string colore;
+    char lun, mar, mer, gio, ven, sab, dom;
+};
+InfoAuto VettInfoAuto[7]
+
+void CaricaVett(InfoAuto VettInfoAuto[])
+{
+    ifstream f("auto.csv", ios::in);
+    string linea;
+
+    while(f.eof())
+    {
+        getline(f, linea);
+        for(int i=0; i<6; i++)
+        {
+            f>>VettInfoAuto[i].categoria
+             >>VettInfoAuto[i].marca
+             >>VettInfoAuto[i].modello
+             >>VettInfoAuto[i].modello
+             >>VettInfoAuto[i].colore
+             >>VettInfoAuto[i].lun
+             >>VettInfoAuto[i].mar
+             >>VettInfoAuto[i].mer
+             >>VettInfoAuto[i].gio
+             >>VettInfoAuto[i].ven
+             >>VettInfoAuto[i].sab
+             >>VettInfoAuto[i].dom;
+        }
+    }
+}
+
+string controlla_giorno(int contatore, char vett[])
+{
+    if(vett[contatore] == 'L')
+        return " Disponibile";
     else 
-        cout<<" Non disponibile";
+        return " Non disponibile";
 }
 
 void controlla_disp(string Categoria, int Giorni)
 {
-    string linea, appoggio, macchina;
+    string linea, appoggio, modello;
     int giorno, cont;
-    string vett_giorni[7];
+    string giorni_sett[7] = {"Lunedi", "Martedi", "Mercoledi", "Giovedi", "Venerdi", "Sabato", "Domenica"};
     fstream f("auto.csv", ios::in | ios::out);
 
-    if(f.is_open())
+    if(!f) cout<<" Errore nell'apertura del file!";
+    else
     {   
         cout<<" Le macchine disponibili per la categoria selezionata sono : \n ";  
         
         //Ciclo di ricerca vettura per la categoria selezionata
-        while(getline(f, linea))
-        {
-            if(linea == Categoria)
-                cout<<linea; 
-        }
+        
         
         //Scelta della vettura in base alla categoria selezionata
         cout<<"\n\n Selezionare il modello della vettura da noleggiare : ";
-        cin>>macchina;
+        cin>>modello;
 
-        if(macchina!=Categoria)
+        if((modello!="FIAT")||(modello!="KIA")||(modello!="Mercedes")||(modello!="Lamborghini")||(modello!="Ford")||(modello!="BMW")||(modello!="Peugeot")||(modello!="Audi"))
             cout<<" La vettura selezionata non fa parte della categoria scelta!\n";
         else 
         {
-            //Ciclo che riempie il vettore "vett_giorni" con i giorni relativi alla vettura selezionata
-            for(int i=0; i<linea.length(); i++)
+            //Output disponibilità modelllo vettura selezionata
+            cout<<" I giorni i cui si può prenotare la vettura sono : \n ";
+            
+            for(int i=0; i<6; i++)
             {
-                if((strcmp(linea[i], 'L')==0)||(strcmp(linea[i], 'A')==0))
-                    vett_giorni[i] = linea[i];
+                cout<<giorni_sett[i];
+                if(VettInfoAuto[i].lun == 'L') cout<<": Disponibile\n"; 
+                    else cout<<" : Non disponibile\n";
+
+                cout<<giorni_sett[i];
+                if(VettInfoAuto[i].mar == 'L') cout<<": Disponibile\n"; 
+                    else cout<<" : Non disponibile\n";
+
+                cout<<giorni_sett[i];
+                if(VettInfoAuto[i].mer == 'L') cout<<": Disponibile\n"; 
+                    else cout<<" : Non disponibile\n";
+                
+                cout<<giorni_sett[i];
+                if(VettInfoAuto[i].gio == 'L') cout<<": Disponibile\n"; 
+                    else cout<<" : Non disponibile\n";
+
+                cout<<giorni_sett[i];
+                if(VettInfoAuto[i].ven == 'L') cout<<": Disponibile\n"; 
+                    else cout<<" : Non disponibile\n";
+                
+                cout<<giorni_sett[i];
+                if(VettInfoAuto[i].sab == 'L') cout<<": Disponibile\n"; 
+                    else cout<<" : Non disponibile\n";
+
+                cout<<giorni_sett[i];
+                if(VettInfoAuto[i].dom == 'L') cout<<": Disponibile\n"; 
+                    else cout<<" : Non disponibile\n";       
             }
 
             //Output dei giorni in cui la vettura e disponibile o meno
             //La funzione "controlla_giorno" si occupa di visualizzare in output "Disponibile" o "Non diponibile" in base alle lettere di noleggio sulla riga della vettura selezionata, evitando di fare un contrllo per ogni output del giorno settimanale
-            cout<<" I giorni i cui si può prenotare la vettura sono : \n ";
-            cont = 0;
-            cout<<" Lunedi (0) : "<<controlla_giorno(cont, vett_giorni[cont]);
-            cont = 1;
-            cout<<" \nMartedi (1) : "<<controlla_giorno(cont, vett_giorni[cont]);
-            cont = 2;
-            cout<<" \nMercoledi (2) : "<<controlla_giorno(cont, vett_giorni[cont]);
-            cont = 3;
-            cout<<" \nGiovedi (3) : "<<controlla_giorno(cont, vett_giorni[cont]);
-            cont = 4;
-            cout<<" \nVenerdi (4) : "<<controlla_giorno(cont, vett_giorni[cont]);
-            cont = 5;
-            cout<<" \nSabato (5) : "<<controlla_giorno(cont, vett_giorni[cont]);
-            cont = 6;
-            cout<<" \nDomenica (6) : "<<controlla_giorno(cont, vett_giorni[cont]);
 
             cout<<"\n\n Inserire giorno usando un numero, esempio: '4' per selezionare 'Venerdi' :\n";
 
@@ -74,16 +118,13 @@ void controlla_disp(string Categoria, int Giorni)
                 if((giorno>7)||(giorno<0))
                     cout<<" Giorno non valido!\n";
                 else
-                    vett_giorni[giorno] = "A"; 
+                    vett_giorni[giorno] = 'A'; 
             }
 
             cout<<" Vettura prenotata correttamente!\n";
         }  
         f.close();
     }   
-    else {
-        cout<<" Errore nell'apertura del file!\n";
-    }
 }
 
 void Scegli_Auto()
