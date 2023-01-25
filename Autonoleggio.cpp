@@ -9,9 +9,9 @@ struct InfoAuto
     string marca;
     string modello;
     string colore;
-    char VettGiorni[6];
+    char VettGiorni[7];
 };
-InfoAuto VettInfoAuto[6];
+InfoAuto VettInfoAuto[7];
 
 void CaricaVett()
 {
